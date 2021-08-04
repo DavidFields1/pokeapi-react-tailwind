@@ -12,11 +12,11 @@ const Card = (url) => {
 
 	useEffect(() => {                
 		fetchPokemon();                
-	}, [0])
+	}, [])
 
     return (
-        <div className="transition ease-in-out">
-            <div className="w-72 border border-black m-4 rounded-md overflow-hidden">                                
+        <div className="">
+            <div className="w-72 border border-black m-4 rounded-md overflow-hidden hover:shadow-2xl">                                
                 <div className="bg-red-500 p-2 m-0 flex items-center border-b border-black">
                     <div className="rounded-full bg-black text-white w-7 h-7 text-sm flex justify-center items-center"> {pokemon.id} </div>
                     <h2 className="font-bold text-xl ml-2 "> {pokemon.name ? pokemon.name.toUpperCase() : ""} </h2>
