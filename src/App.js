@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { getPokemons } from './api';
 import Card from './components/Card';
 import NavBar  from './components/NavBar';
 import Loader from './components/Loader';
-import SearchBar from './components/SearchBar';
 import Pagination from './components/Pagination';
 
 function App() {
@@ -11,7 +10,16 @@ function App() {
 	const [pokemons, setPokemons] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [offset, setOffset] = useState(0);
-	
+	const [search, setSearch] = useState('')
+
+	const filteredData = useMemo(() => 
+		pokemons.filter( pokemon => {
+			return pokemon.name.toLowerCase().includes(search.toLocaleLowerCase())
+		}),
+		[pokemons, search]
+	)
+
+
 	async function fetchPokemons(limit = 20){		
 		const data = await getPokemons(limit, offset);			
 		setPokemons(data.results)
@@ -31,11 +39,23 @@ function App() {
 		}
 	}
 
+	const handleSearch = (event) => {
+		setSearch(event.target.value)
+	}
+
+
 	return (
 			<div className="App">
 				<NavBar />
 				<div className="w-full flex justify-center">
-					<SearchBar />
+					<div className="relative flex w-3/4 flex-wrap items-stretch mb-3">        
+						<input
+							onChange={handleSearch}
+							type="text" 
+							placeholder="Search"
+							className="shadow-md px-3 py-4 placeholder-gray-400 text-gray-600 relative bg-whit rounded text-base border border-gray-400 outline-none focus:outline-none focus:ring w-full pl-10" 
+						/>
+					</div>
 				</div>
 					
 				{
@@ -46,7 +66,7 @@ function App() {
 						<>
 						<div className="px-24 py-5 grid grid-cols-4">
 						{
-								pokemons.map( pokemon => (						
+								filteredData.map( pokemon => (						
 									<Card url={pokemon.url} key={pokemon.name}/>
 								))
 						}		
